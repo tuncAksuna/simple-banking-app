@@ -73,7 +73,6 @@ public class BankAccountServiceImpl implements BankAccountService {
      * It retrieves the BankAccount object from the database via JPA according to the account number that comes as an argument,
      * and returns the value by equalizing it to the BankAccountResponse object.
      */
-    // TODO : TRANSACTION_LİST ÇOK FAZLA GELİYOR  MAPPINGTE BİR SORUN VAR GİBİ !!!
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public BankAccountResponse getAccount(String accountNumber) {
@@ -81,14 +80,7 @@ public class BankAccountServiceImpl implements BankAccountService {
                 .orElseThrow(() -> new IllegalArgumentException("Data Not Found !"));
 
         List<TransactionDto> transactionDtos = TransactionMapper.MAPPER.mapToTransactionDto(bankAccount.getTransactionList());
-        BankAccountResponse bankAccountResponse = BankAccountMapper.MAPPER.mapToBankAccountResponseDto(bankAccount);
-
-        return new BankAccountResponse
-                        (bankAccountResponse.getAccountNumber(),
-                        bankAccountResponse.getOwner(),
-                        bankAccountResponse.getBalance(),
-                        bankAccountResponse.getCreatedDate(),
-                        transactionDtos);
+        return BankAccountMapper.MAPPER.mapToBankAccountResponseDto(bankAccount, transactionDtos);
     }
 
     /**
