@@ -5,10 +5,11 @@ import com.tuncode.bankingapp.configuration.response.TransactionResultResponse;
 
 public interface BankAccountService {
 
-    TransactionResultResponse credit(String accountNumber, double amount);
+    TransactionResultResponse depositToBankAccount(String owner, String accountNumber, double amount);
 
-    TransactionResultResponse debit(String accountNumber, double amount);
+    TransactionResultResponse debitFromBankAccount(String owner, String accountNumber, double amount);
 
-    BankAccountResponse getAccount(String accountNumber);
+    BankAccountResponse getBankAccount(String accountNumber);
+
 
 }

@@ -13,19 +13,19 @@ public class BankAccountController {
 
     private final BankAccountService bankAccountService;
 
-    @PostMapping("/credit/{accountId}")
-    public TransactionResultResponse credit(@PathVariable String accountId, @RequestParam double amount) {
-        return bankAccountService.credit(accountId, amount);
+    @PostMapping("/credit/{accountNumber}")
+    public TransactionResultResponse depositToBankAccount(@PathVariable String accountNumber) {
+        return bankAccountService.depositToBankAccount("Static owner name", accountNumber, 50);
     }
 
-    @PostMapping("/debit/{accountId}")
-    public TransactionResultResponse debit(@PathVariable String accountId, @RequestParam double amount) {
-        return bankAccountService.debit(accountId, amount);
+    @PostMapping("/debit/{accountNumber}")
+    public TransactionResultResponse debitFromBankAccount(@PathVariable String accountNumber) {
+        return bankAccountService.debitFromBankAccount("Static owner name", accountNumber, 100);
     }
 
     @GetMapping("/{accountNumber}")
-    public BankAccountResponse getAccount(@PathVariable String accountNumber) {
-        return bankAccountService.getAccount(accountNumber);
+    public BankAccountResponse getBankAccount(@PathVariable String accountNumber) {
+        return bankAccountService.getBankAccount(accountNumber);
     }
 
 }

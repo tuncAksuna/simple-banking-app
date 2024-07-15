@@ -1,22 +1,25 @@
 package com.tuncode.bankingapp.model;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
 import lombok.*;
 
-@Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @ToString
-@DiscriminatorValue(value = "PHONE_BILL_PAYMENT")
 public class PhoneBillPaymentTransaction extends Transaction {
 
     private String phoneNumber;
     private String operatorName;
 
-    public PhoneBillPaymentTransaction() {
+    public PhoneBillPaymentTransaction(double amount, String phoneNumber, String operatorName) {
+        super(amount);
+        this.phoneNumber = phoneNumber;
+        this.operatorName = operatorName;
         setType("PHONE_BILL_PAYMENT");
+    }
+
+    @Override
+    void process(BankAccount bankAccount) {
+        bankAccount.debit(getAmount());
     }
 
 }

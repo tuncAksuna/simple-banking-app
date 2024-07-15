@@ -1,35 +1,48 @@
 package com.tuncode.bankingapp.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.tuncode.bankingapp.configuration.exception.InsufficientBalanceException;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Provide a simple model of how bank accounts might work in an overly simplified world.
  */
-@Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class BankAccount extends Auditable {
+public class BankAccount {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String owner;
     private String accountNumber;
-    private double balance;
-
-    @OneToMany(
-            mappedBy = "bankAccount",
-            cascade = CascadeType.ALL
-    )
+    private double balance = 1000;
+    private LocalDateTime createdDate = LocalDateTime.now();
     private List<Transaction> transactionList = new ArrayList<>();
+
+    public BankAccount(String owner, String accountNumber) {
+        this.owner = owner;
+        this.accountNumber = accountNumber;
+    }
+
+    public void post(Transaction transaction) {
+        transaction.process(this);
+        transactionList.add(transaction);
+    }
+
+    public void debit(double amount) {
+        balanceControl(amount);
+        this.balance -= amount;
+    }
+
+    public void credit(double amount) {
+        this.balance += amount;
+    }
+
+    private void balanceControl(double amount) {
+        if (amount > this.balance) {
+            throw new InsufficientBalanceException("Insufficient balance !");
+        }
+    }
 
 }
